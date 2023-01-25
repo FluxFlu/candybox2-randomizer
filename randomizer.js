@@ -2,40 +2,62 @@
 
 
 const settings = {
-    "Grid Items": true,
+    "Randomize Grid Items": true,
 
-    "Map": false,
-    "Talking Candy": false,
-    "PLAY": false,
+    "Randomize Map": false,
+    "Randomize Talking Candy": false,
+    "Randomize PLAY": false,
 
+    "Prevent Pogo Stick from being inside Unicorn Horn chest": true,
+    "Prevent Desert Fortress Key from being inside Desert Fortress": true,
 }
 
 const settingEffects = {
     
-    "Talking Candy": () => gridItems.push(`TalkingCandy`),
+    "Randomize Talking Candy": () => gridItems.push(`TalkingCandy`),
 
-    "Map": () => gridItems.push(`MainMap`),
+    "Randomize Map": () => gridItems.push(`MainMap`),
 
-    "PLAY": () => {
+    "Randomize PLAY": () => {
         gridItems.push(`P`);
         gridItems.push(`L`);
         gridItems.push(`A`);
         gridItems.push(`Y`);
     },
     
-    "Grid Items": randomizeGridItems,
+    "Randomize Grid Items": () => {
+        for (let i = 0; i < 60; i++) {
+            const j = random_item(gridItems);
+            const k = random_item(gridItems);
+            if (j == k)
+                continue;
+            replace_value(j, k);
+        }
+    },
+
+    "Prevent Pogo Stick from being inside Unicorn Horn chest": () => {while (g.text.includes(`UnicornHorn("gridItemPossessedUnicornHorn","gridItemPogoStickName"`)) replace_value("UnicornHorn", k)},
+    "Prevent Desert Fortress Key from being inside Desert Fortress": () => {
+        while (g.text.includes(`UnicornHorn("gridItemPossessedUnicornHorn","gridItemFortressKeyName"`) ||
+        g.text.includes(`XinopherydonClaw("gridItemPossessedXinopherydonClaw","gridItemFortressKeyName"`)) {
+            replace_value("UnicornHorn", k);
+            replace_value("XinopherydonClaw", k);
+        }
+    },
+
+    
 }
 
 const readline = require('readline').createInterface({
     input: process.stdin,
     output: process.stdout
 });
+
 function ask(i) {
     if (i == Object.keys(settings).length) {
         main();
         readline.close();
     } else
-    readline.question(`Randomize ${Object.keys(settings)[i]}? (${Object.values(settings)[i] ? 'Y/n' : 'y/N'}): `, input => {
+    readline.question(`${Object.keys(settings)[i]}? (${Object.values(settings)[i] ? 'Y/n' : 'y/N'}): `, input => {
         settings[Object.keys(settings)[i]] = input == 'Y' || (input == '' && Object.values(settings)[i]);
         ask(i + 1);
     });
@@ -89,18 +111,6 @@ function replace_value(from, to) {
                     .replaceAll(gridItemVisuals(from), "REPLACESTRING")
                     .replaceAll(gridItemVisuals(to), gridItemVisualOut(from))
                     .replaceAll("REPLACESTRING", gridItemVisualOut(to))
-}
-
-
-function randomizeGridItems() {
-    for (let i = 0; i < 60; i++) {
-        const j = random_item(gridItems);
-        const k = random_item(gridItems);
-        if (j == k)
-            continue;
-        if (settings["Grid Items"])
-            replace_value(j, k);
-    }
 }
 
 function main() {
