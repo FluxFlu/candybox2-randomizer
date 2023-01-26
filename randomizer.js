@@ -113,6 +113,10 @@ function replace_value(from, to) {
                     .replaceAll("REPLACESTRING", gridItemVisualOut(to))
 }
 
+function text_clean() {
+    g.text = g.text.replace(`{if(Saving.loadBool("gridItemPossessedFeather")==false){this.getGame().getPlayer().jump(3)\n}else{this.getGame().getPlayer().jump(6)}`, `{if(Saving.loadBool("gridItemPossessedFeather")){this.getGame().getPlayer().jump(6)\n}else{this.getGame().getPlayer().jump(3)}`)
+}
+
 function main() {
 
     g.text = fs.readFileSync("./candybox2.js", "utf-8");
@@ -120,6 +124,7 @@ function main() {
         return console.log ("ERROR: Cannot find `./candybox2.js`.");
 
     console.log("Randomizing...")
+    text_clean();
     Object.keys(settingEffects).forEach(e => { if (settings[e]) settingEffects[e]() });
     
     fs.writeFileSync("./candybox2randomized.js", g.text);
