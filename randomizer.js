@@ -58,7 +58,7 @@ function ask(i) {
         readline.close();
     } else
     readline.question(`${Object.keys(settings)[i]}? (${Object.values(settings)[i] ? 'Y/n' : 'y/N'}): `, input => {
-        settings[Object.keys(settings)[i]] = input == 'Y' || settings[Object.keys(settings)[i]] = input == 'y' || (input == '' && Object.values(settings)[i]);
+        settings[Object.keys(settings)[i]] = input == 'Y' || input == 'y' || (input == '' && Object.values(settings)[i]);
         ask(i + 1);
     });
 }
